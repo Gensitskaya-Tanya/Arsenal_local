@@ -15,9 +15,9 @@ public class Main {
 
     public static void main(String[] args) {
         Double[] arr = read();
-        for (int i = 0; i < arr.length; i++) {
-            System.out.println(arr[i]);
-        }
+//        for (int i = 0; i < arr.length; i++) {
+//            System.out.println(arr[i]);
+//        }
         centerOfWeightSeek(arr);
 //        write(xs, 2);
     }
@@ -25,16 +25,18 @@ public class Main {
 
     private static void centerOfWeightSeek(Double[] sg) {
 // вычитание среднего уровня
+        System.out.println("1)  Вычитание среднего уровня по цугу");
         int xn = sg.length;
-        System.out.println(" длина массива = " + xn);
+        System.out.println("    длина массива цуга = " + xn);
         double[] xc = new double[2000];
         double[] xs = new double[2000];
-        double pod = 0;                       // среднее значение сигнала
+
+        double pod = 0;
         for (int i = 0; i < xn; i++) {
             pod = pod + sg[i] / xn;
         }
-        System.out.println("среднее значение сигнала = " + pod);
-        // // centr of weight seek    центр поиска веса
+        System.out.println("    среднее значение сигнала по цугу = " + pod);
+        System.out.println("2)  Поиск центра масс квадратичного сигнала");
         for (int i = 0; i < xn; i++) {
             xc[i] = (sg[i] - pod);
             xs[i] = 0;
@@ -46,32 +48,36 @@ public class Main {
             ave = ave + xc[i] * xc[i];
         }
         double centr = fre / ave;
-        System.out.println("центр масс = " + centr);
+        System.out.println("    центр масс квадратичного сигнала = " + centr);
+
+        System.out.println("3)  Грубая оценка полупериода");
         int c = (int) Math.round(centr);
         double dir = centr;
         // halfperiod estimation оценка полупериода
         while (xc[c] * xc[c - 1] > 0) {
             c++;
         }
-        System.out.println("значение переменной с = " + c);
+        System.out.println("    значение переменной (c) изменилось из  " + (int) Math.round(centr) + " на значение: " + c + " - четверть периода");
         int n = 1;
         while (xc[c + n] * xc[c + n - 1] > 0) {
             n++;
         }
-        System.out.println("значение переменной с = " + c);
-        System.out.println("значение переменной n = " + n);
-        c = (int) Math.round(centr);
-        System.out.println("значение переменной с после  Math.round(centr) = " + c);
+        System.out.println("    к значению  с = " + c + " прибавляем значение переменной n = " + n + " - следующий полупериод");
 
+        c = (int) Math.round(centr);
+        System.out.println("4)  Квадратичная демодуляция");
+        System.out.println("    переприсваеваем исходное зачение переменной (с) = (int) Math.round(centr) = " + c);
+        System.out.println("    " + n + "   - к-во точек в полупериоде");
         // quadrature demodulator      квадратурный демодулятор
         double qr = (double) n / 2 - n / 2;
-        System.out.println(" значение qr = " + qr);
+        System.out.println("    qr = " + qr + "-дробная часть числа точек в четверте периода");
         int qn = (int) (n / 2);
-        System.out.println(" значение qn = " + qn);
+        System.out.println("    qn = " + qn + "-целая часть числа точек в четверте периода");
         for (int i = qn + 1; i < xn - qn - 1; i++) {
             xs[i] = (xc[i] * xc[i] + app(qr, xc[i + qn], xc[i + qn + 1]) * app(qr, xc[i + qn], xc[i + qn + 1]) / 2 +
                     app(1 - qr, xc[i - qn - 1], xc[i - qn]) * app(1 - qr, xc[i - qn - 1], xc[i - qn]) / 2) / 10;
         }
+        System.out.println("5)  Поиск центра масс демодулированного сигнала");
         // centr of weight seek second iteration   центр веса искать вторую итерацию
         n = 1;
         ave = 0;
@@ -84,29 +90,129 @@ public class Main {
 
         centr = fre / ave;
         c = (int) Math.round(centr);
+        System.out.println("    centr = " + c + "   - центр масс демодулированного сигнала");
         // 460 ms
-        System.out.println("центр масс на второй итеррации демодулированного сигнала = " + c);
 // range estimation     оценка дальности
+        System.out.println("6)  Оценка размера цуга по скорости затухания демодулированного сигнала");
         double wt = 0;
         n = 0;
         while ((xs[c + n] > xs[c] / 10) && (c + n < xn)) {
             n++;
+
         }
-        System.out.println("оценка дальности n = " + n);
         wt = wt + n / 2.0;
+        System.out.println("    xn = " + xn + " - к-во точек суммарное");
+        System.out.println("    wt = " + " - переменная для выравнивания центра или усредненное к-во точек справа и слева");
+        System.out.println("    (n+) = " + n + " - к-во точек от центра вправо  ");
+
+
         n = 0;
         while ((xs[c - n] > xs[c] / 10) && (c - n > 0)) {
             n++;
         }
-        System.out.println("оценка дальности n = " + n);
+        System.out.println("    (n-) = " + n + " - к-во точек от центра влево  ");
 //        //Env:=c+wt-n/2.0;
 ////  exit;
 //
         c = (int) Math.round(c + wt - n / 2.0);
+
         wt = wt + n / 2.0;
         int br = (int) Math.round(wt * 2.7 / 2.0);
 //        // 470 ms
-        System.out.println("c  + wt +  br  =" + c + "   " + wt+ "  "+ br);
+        System.out.println("7)  Коррекция уровня на вертикальную асимметрию цуга");
+        System.out.println("    Определение нулевого уровня как среднего сигнала за рамками цуга");
+        System.out.println("    c = " + c + " - центр демодулированного сигнала из внесенной центрировкой");
+        System.out.println("    wt = " + wt + " - усредненное к-во точек справа и слева");
+        System.out.println("    br = " + br + "- это (wt * 2.7 / 2.0)");
+
+        System.out.println("8)  Расчет периода осциляций");
+        System.out.println("     -поиск нулей сигнала");
+        System.out.println("     -фильтрация ложных нулей");
+        System.out.println("     -поиск среднего значения полупериода ");
+
+
+
+
+        n = 0;
+        double[] pos = new double[100];
+        for (int i = -br + 1; i < br + 1; i++) {
+            if (xc[c + i + 1] * xc[c + i - 1] < 0) {
+                pos[n] = i + (xc[c + i - 1] + xc[c + i + 1]) / (xc[c + i - 1] - xc[c + i + 1]); // определение нулей
+//                System.out.println(n + " " + pos[n] + "  " + (xc[c + i - 1] + xc[c + i + 1]) / (xc[c + i - 1] - xc[c + i + 1]));
+                n++;
+            }
+            if (n > 1) {
+                xs[c + i] = (pos[n - 1] - pos[n - 2]) / 24.0;
+//                System.out.println((c + i)+ "  " + ((pos[n - 1] - pos[n - 2]) / 24.0));
+            }
+        }
+//        System.out.println(n);
+        n--;
+        double per = 0;
+        ave = 0;
+
+        int k = 0;
+        for (int i = 1; i < n; i++) {
+            if ((pos[i]-pos[i-1])>2) {
+                k++;
+                pos[k]=pos[i];
+            }else {
+                pos[k]=(pos[i]+pos[k])/2;   // записали все нули
+            }
+
+        }
+        ;
+//        for (int i = 0; i < pos.length ; i++) {
+//            System.out.println(i + "  "+ pos[i]); // записано только первые 25 значений нулей остальные остались дубликаты
+//        }
+        n=k;
+
+//
+//        for i:=1 to n do
+//            if ((pos[i]-pos[i-1])>2) then
+//                    begin
+//        per:=per+1.0*(pos[i]-pos[i-1]);
+//        ave:=ave+1;
+//        end;
+//        per:=per/ave;
+//        fre:=per;
+//        per:=0;
+//        ave:=0;
+//        for i:=1 to n do
+//            if ((pos[i]-pos[i-1])>fre*0.5) then
+//                    begin
+//        per:=per+1.0*(pos[i]-pos[i-1]);
+//        ave:=ave+1;
+//        end;
+//        per:=per/ave;
+
+        per=0;
+        ave=0;
+        for (int i = 1; i < n ; i++) {
+            if  ((pos[i]-pos[i-1])>2){
+                per=per+1.0*(pos[i]-pos[i-1]); // суммируем расстояние между нулями
+                ave=ave+1; //суммируем к-во нулей
+            }
+        }
+
+        per=per/ave; //среднее расстояние между нулями (к-во точек)
+        System.out.println("     - 1.среднее значения полупериода (к-во точек между нулями) = " + per);
+        fre=per;
+        per=0;
+        ave=0;
+        for (int i = 1; i < n; i++) {
+            if ((pos[i]-pos[i-1])>fre*0.5){
+                per=per+1.0*(pos[i]-pos[i-1]);
+                ave=ave+1;
+            }
+        }
+        per=per/ave;
+        System.out.println("     - 2. среднее значения полупериода (к-во точек между нулями) = " + per);
+        double phase =(pos[n/2]+c);
+        System.out.println(phase);
+
+
+
     }
 
     private static double app(double dw, double a, double b) {
