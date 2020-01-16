@@ -11,9 +11,9 @@ import java.util.List;
 
 public class Main {
 
-    private static final String FILE_NAME_READ = "G:\\Информация по расчету фаз\\программа для СЫРЫХ ДАННЫХ\\Книга1.xlsx";
+    private static final String FILE_NAME_READ = "D:\\320x300 zerkalo.xlsx";
     //    private static final String FILE_NAME_READ = "G:\\Информация по расчету фаз\\Сгенерированный сигнал шаг 0,01.xlsx";
-    private static final String FILE_NAME_WRITE = "G:\\Информация по расчету фаз\\IDEA\\Arsenal_local\\MyNextExcel.xlsx";
+    private static final String FILE_NAME_WRITE = "G:\\Информация по расчету фаз\\программа для СЫРЫХ ДАННЫХ\\test8 от 14,01,2020\\190x205 new 0,135025896420204.xlsx";
 
     public static void main(String[] args) {
         Double[] arr = read();
@@ -78,7 +78,7 @@ public class Main {
             xs[i] = (xc[i] * xc[i] + app(qr, xc[i + qn], xc[i + qn + 1]) * app(qr, xc[i + qn], xc[i + qn + 1]) / 2 +
                     app(1 - qr, xc[i - qn - 1], xc[i - qn]) * app(1 - qr, xc[i - qn - 1], xc[i - qn]) / 2) / 10;
         }
-//        write(xs, 12);
+        write(xs, 3);
 //5_________________________________________________________________________________________
         System.out.println("5)  Поиск центра масс демодулированого сигнала");
         // centr of weight seek second iteration   центр веса искать вторую итерацию
@@ -90,7 +90,9 @@ public class Main {
             ave = ave + xs[i];
         }
         centr = fre / ave;
+        double centreDemod = centr;
         c = (int) Math.round(centr);
+
         System.out.println("    centr = " + c + "   - центр масс демодулированного сигнала");
 //6_________________________________________________________________________________________
         System.out.println("6)  Оценка размера цуга по скорости затухания демодулированного сигнала");
@@ -350,7 +352,9 @@ public class Main {
             shift = -shift;
         }
         // выдача результата
-        double Env = (phase / fn) * 0.270;//c-shift;
+        double Env = (phase / fn) * 0.270 + centreDemod*0.135/per ;//c-shift; (centreDemod*0.135/per  выражение добавлено 16,01,2020)
+
+
         System.out.println("shift = "+shift);
 
         System.out.println();
@@ -377,7 +381,7 @@ public class Main {
                 while (iterator.hasNext()) {
                     Cell cell = iterator.next();
                     Double o = null;
-                    if (cell.getColumnIndex() == 1) {
+                    if (cell.getColumnIndex() == 0) {
                         o = cell.getNumericCellValue();
 //                        System.out.println("cell value = " + o);
                         doubles.add(o);
