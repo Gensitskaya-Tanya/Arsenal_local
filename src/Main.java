@@ -11,9 +11,8 @@ import java.util.List;
 
 public class Main {
 
-    private static final String FILE_NAME_READ = "D:\\320x300 zerkalo.xlsx";
-    //    private static final String FILE_NAME_READ = "G:\\Информация по расчету фаз\\Сгенерированный сигнал шаг 0,01.xlsx";
-    private static final String FILE_NAME_WRITE = "G:\\Информация по расчету фаз\\программа для СЫРЫХ ДАННЫХ\\test8 от 14,01,2020\\190x205 new 0,135025896420204.xlsx";
+    private static final String FILE_NAME_READ = "H:\\Информация по расчету фаз\\тестирование частей кода\\test8 31.01.2020_300x300.xlsx";
+    private static final String FILE_NAME_WRITE = "H:\\Информация по расчету фаз\\тестирование частей кода\\test8 31.01.2020_300x300.xlsx";
 
     public static void main(String[] args) {
         Double[] arr = read();
@@ -381,7 +380,7 @@ public class Main {
                 while (iterator.hasNext()) {
                     Cell cell = iterator.next();
                     Double o = null;
-                    if (cell.getColumnIndex() == 0) {
+                    if (cell.getColumnIndex() == 1) {
                         o = cell.getNumericCellValue();
 //                        System.out.println("cell value = " + o);
                         doubles.add(o);

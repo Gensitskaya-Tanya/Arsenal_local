@@ -15,9 +15,41 @@ import java.util.List;
 
 public class ReadAndWriteInExel {
 
-    public ReadAndWriteInExel() {
+    public  double[][] correctReadMethod(int colId, int colVal, String FILE_NAME_READ) {
+        List<List<Double>> doubles = new ArrayList<>();
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook(FILE_NAME_READ);
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            for (Row row : sheet) {
+                Iterator<Cell> iterator = row.cellIterator();
+                List<Double> o = new ArrayList<>();
+                while (iterator.hasNext()) {
+                    Cell cell = iterator.next();
+                    if (cell.getColumnIndex() == colId) {
+                        o.add(cell.getNumericCellValue());
+//                        System.out.println("cell value = " + o);
+                    }
+                    if (cell.getColumnIndex() == colVal) {
+                        o.add(cell.getNumericCellValue());
+//                        System.out.println("cell value = " + o);
+                    }
+                }
+                if (!o.isEmpty()) {
+                    doubles.add(o);
+                    o = new ArrayList<>();
+                }
+            }
+            double[][] d = new double[doubles.size()][2];
+            for (int i = 0; i < doubles.size(); i++) {
+                d[i][0] = doubles.get(i).get(0);
+                d[i][1] = doubles.get(i).get(1);
+            }
+            return d;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
-
 
     //Читает exel файл 2-ю колонку
     public  Double[] read(int colNum, String FILE_NAME_READ) {
@@ -49,7 +81,7 @@ public class ReadAndWriteInExel {
 
 
 
-    public static void write(double[] doubles, int colNum, int rowNum, String FILE_NAME_WRITE) {
+    public  void write(double[] doubles, int colNum, int rowNum, String FILE_NAME_WRITE) {
         FileInputStream inputStream = null;
         FileOutputStream outputStream = null;
         try {
