@@ -1,21 +1,30 @@
-import com.sun.org.apache.xpath.internal.SourceTree;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Main {
+/**
+ * Created by vertex on 07.02.2020.
+ */
+public class FirstRartOfCode {
 
-    private static final String FILE_NAME_READ = "H:\\Информация по расчету фаз\\тестирование частей кода\\test8 31.01.2020_300x300.xlsx";
-    private static final String FILE_NAME_WRITE = "H:\\Информация по расчету фаз\\тестирование частей кода\\test8 31.01.2020_300x300.xlsx";
+
+    private static final String FILE_NAME_READ = "G:\\Информация по расчету фаз\\тестирование частей кода\\300x300.xlsx";
+    private static final String FILE_NAME_WRITE = "G:\\Информация по расчету фаз\\тестирование частей кода\\300x300.xlsx";
 
     public static void main(String[] args) {
-        Double[] arr = read();
+        ReadAndWriteInExel readAndWriteInExel = new ReadAndWriteInExel();
+        Double[] arr = readAndWriteInExel.read(0, FILE_NAME_READ);
 //        for (int i = 0; i < arr.length; i++) {
 //            System.out.println(arr[i]);
 //        }
@@ -25,6 +34,8 @@ public class Main {
 
 
     private static void centerOfWeightSeek(Double[] sg) {
+        ReadAndWriteInExel readAndWriteInExel = new ReadAndWriteInExel();
+
 //1_________________________________________________________________________________________
         System.out.println("1)  Вычитание среднего уровня по цугу");
         int xn = sg.length;
@@ -35,13 +46,19 @@ public class Main {
         for (int i = 0; i < xn; i++) {
             pod = pod + sg[i] / xn;
         }
-//2_________________________________________________________________________________________
-        System.out.println("2)  Поиск центра масс квадратичного сигнала");
+
         for (int i = 0; i < xn; i++) {
-            xc[i] = (sg[i] - pod);
+//            xc[i] = (sg[i] - pod);
             xs[i] = 0;
         }
+//Часть кода, которая выравнивает данные, убирая наклон. Используется линия регрессии.
+//_______________________________________________________________
+        Regres regres = new Regres();
+        xc = regres.getAlignedDate(sg);
+        readAndWriteInExel.write(xc, 4,0, FILE_NAME_WRITE);
 
+//2_________________________________________________________________________________________
+        System.out.println("2)  Поиск центра масс квадратичного сигнала");
         double fre = 0;
         double ave = 0;
         for (int i = 0; i < xn; i++) {
@@ -77,7 +94,27 @@ public class Main {
             xs[i] = (xc[i] * xc[i] + app(qr, xc[i + qn], xc[i + qn + 1]) * app(qr, xc[i + qn], xc[i + qn + 1]) / 2 +
                     app(1 - qr, xc[i - qn - 1], xc[i - qn]) * app(1 - qr, xc[i - qn - 1], xc[i - qn]) / 2) / 10;
         }
-        write(xs, 3);
+//        write(xs, 6);
+
+        /*
+            private static double app(double dw, double a, double b) {
+        double app;
+        return app = a * dw + b * (1 - dw);      app= (xc[i + qn])*qr + xc[i + qn + 1]*(1-qr)
+    }
+         */
+
+
+//4.1        Удаление значений из массива, которые ниже порога 30
+        System.out.println("4.1)  Удаление значений из массива, которые ниже порога 30");
+        MinMax minMax = new MinMax();
+        double[] newArr = minMax.removeDateFromArr(xs, 35);
+        GaussFunction gaussFunction = new GaussFunction();
+
+        double[] gaus = gaussFunction.getGaussFunction(newArr);
+        for (int i = 0; i < gaus.length; i++) {
+            xs[i] = gaus[i];
+        }
+        readAndWriteInExel.write(xs, 9,0, FILE_NAME_WRITE);
 //5_________________________________________________________________________________________
         System.out.println("5)  Поиск центра масс демодулированого сигнала");
         // centr of weight seek second iteration   центр веса искать вторую итерацию
@@ -210,154 +247,20 @@ public class Main {
         System.out.println("     phase/ave = " + (phase / ave));
         if (ave < 0 || ave > 0) {
             phase = c + phase / ave; // c + среднее значение по
-            double temp =( phase / ave);
-            System.out.println("temp = " + temp);
-            System.out.println("    центр масс +    среднее значение по фазе (c+phase/ave) = " + c + "+" + temp + "=" +phase);
+            double temp = (phase / ave);
+            System.out.println("MinMax = " + temp);
+            System.out.println("    центр масс +    среднее значение по фазе (c+phase/ave) = " + c + "+" + temp + "=" + phase);
         } else {
             phase = c;
-            System.out.println("   phase  = " +phase);
+            System.out.println("   phase  = " + phase);
         }
         System.out.println("     c = " + c);
 
 
-//10_________________________________________________________________________________________
-        System.out.println("10) Квадратурный демодулятор второй итерации "); //расчет по среднему значению полупериода
-        qr = (double) per / 2 - (int) per / 2;
-        qn = (int) (per / 2);
-        System.out.println("    qr = " + qr + "-дробная часть числа точек в четверте периода между нулями");
-        System.out.println("    qn = " + qn + "-целая часть числа точек в четверте периода между нулями");
-        for (int i = qn + 1; i < xn - qn - 1; i++) {
-            xs[i] = (xc[i] * xc[i] + app(qr, xc[i + qn], xc[i + qn + 1]) * app(qr, xc[i + qn], xc[i + qn + 1]) / 2 +
-                    app(1 - qr, xc[i - qn - 1], xc[i - qn]) * app(1 - qr, xc[i - qn - 1], xc[i - qn]) / 2) / 10;
-        }
-//write(xs, 10);
-        wt = 0;
-        n = 0;
-        while ((xs[c + n] > xs[c] / 10) && (c + n < xn)) {
-            n++;
-        }
-        wt = wt + n / 2.0;
-        n = 0;
-        while ((xs[c - n] > xs[c] / 10) && (c - n > 0)) {
-            n++;
-        }
-        wt = wt + n / 2.0;
-        br = (int) Math.round(1.7 * wt * 2.7 / 2.7);
-        int hn = (int) (1.7 * wt * 2.7 / 2.7);
-        System.out.println("wt = " + wt);
-        System.out.println("hn = " + hn);
-        System.out.println("br = " + br);
-
-
-        if ((c + hn) > xn) {
-            hn = xn - c;
-        }
-        if ((c - hn) < 0) {
-            hn = c;
-        }
-        System.out.println("    c = " + c);
-        System.out.println("    xn = " + xn);
-        System.out.println("    hn = " + hn);
-//_________________________________________________________________________________________
-// frequency range calculation  расчет частотного диапазона
-        System.out.println("расчет частотного диапазона");
-        int fn = 100 * xn;
-        double fg = fn / (2 * per);
-        int fi = (int) Math.round(fg - 1.5 * 2.7 * 2.7 * Math.log(2) * fn / (2 * Math.PI * wt));
-        int fo = (int) Math.round(fg + 1.5 * 2.7 * 2.7 * Math.log(2) * fn / (2 * Math.PI * wt));
-        br = Math.round(20 * fn / (fo - fi));
-        fi = Math.round(fi * br / fn);
-        fo = Math.round(fo * br / fn);
-        fn = br;
-        double sf = Math.sqrt(fn);
-        System.out.println("fi = " + fi);
-        System.out.println("fo = " + fo);
-        // local fourier transform локальное преобразование Фурье
-        double[] fc = new double[2000];
-        double[] fs = new double[2000];
-        double[] fm = new double[2000];
-
-        for (k = fi; k < fo; k++) {
-            fc[k - fi] = xc[c] / sf;
-            fs[k - fi] = 0;
-            for (int i = 1; i < hn - 1; i++) {
-                fc[k - fi] = fc[k - fi] + (xc[c - i] + xc[c + i]) * Math.cos(2 * Math.PI * k * i / fn) / sf;
-                fs[k - fi] = fs[k - fi] + (xc[c - i] - xc[c + i]) * Math.sin(2 * Math.PI * k * i / fn) / sf;
-            }
-            fm[k - fi] = Math.sqrt(fc[k - fi] * fc[k - fi] + fs[k - fi] * fs[k - fi]);
-        }
-
-//write(fm,15);
-
-        // calculate central frequency   рассчитать центральную частоту
-        fre = 0;
-        k = 1;
-        for (int i = 0; i < fo - fi; i++) {
-            if (fm[i] > fm[k]) {
-                k = i;
-            }
-        }
-        double om = 0;
-        if ((fm[k + 1] - fm[k - 1]) > 0) {
-            om = (fm[k + 1] - fm[k - 1]) / (fm[k] - fm[k - 1]);
-            om = om / 2;
-        }
-        System.out.println("om = "+ om);
-        if ((fm[k + 1] - fm[k - 1]) < 0) {
-            om = (fm[k + 1] - fm[k - 1]) / (fm[k] - fm[k + 1]);
-            om = om / 2;
-        }
-        System.out.println("om = "+ om);
-        om = om + k;
-        System.out.println("om + k = "+ om);
-        k = (int) (om);
-// calculate phase  рассчитать фазу
-        double[] fp = new double[2000];
-        for (int i = 0; i < fo - fi; i++) {
-            if (fm[i] > fm[k] * 0.5) {
-                fp[i] = Math.acos(fc[i] / fm[i]);
-            }
-        }
-//        write(fp,16);
-//        for (int i = 0; i <fp.length ; i++) {
-//            System.out.println(fp[i]);
-//        }
-        double shift = 0;
-        fre = 0;
-        ave = 0;
-        System.out.println("k="+k);
-        shift = Math.abs(fp[k] - fp[k - 1]);
-        System.out.println("shift = " + shift);
-        int i = k + 1;
-        while ((fm[i] > fm[k] * 0.5) && (Math.abs(shift - Math.abs(fp[i] - fp[i - 1])) < shift)) {
-            if (Math.abs(shift - Math.abs(fp[i] - fp[i - 1])) < shift) {
-                ave = ave + 1;
-                fre = fre + Math.abs(fp[i] - fp[i - 1]);
-            }
-            i++;
-        }
-        i = k - 1;
-        while ((fm[i] > fm[k] * 0.5) && (Math.abs(shift - Math.abs(fp[i + 1] - fp[i])) < shift)) {
-            if (Math.abs(shift - Math.abs(fp[i + 1] - fp[i])) < shift) {
-                ave = ave + 1;
-                fre = fre + Math.abs(fp[i + 1] - fp[i]);
-            }
-            i--;
-        }
-        phase = fn / 2 + fp[k] - (fre / ave) * (om + fi);
-        System.out.println("phase = " + phase);
-        shift = -fn * (fre / ave) / (2 * Math.PI);
-        if (dir < c) {
-            shift = -shift;
-        }
         // выдача результата
-        double Env = (phase / fn) * 0.270 + centreDemod*0.135/per ;//c-shift; (centreDemod*0.135/per  выражение добавлено 16,01,2020)
+//        double Env = (phase / fn) * 0.270 + centreDemod*0.135/per ;//c-shift; (centreDemod*0.135/per  выражение добавлено 16,01,2020)
 
-
-        System.out.println("shift = "+shift);
-
-        System.out.println();
-
+        double Env = 0.135 * phase / per;
         System.out.println("Env = " + Env);
 
     }
@@ -366,67 +269,6 @@ public class Main {
     private static double app(double dw, double a, double b) {
         double app;
         return app = a * dw + b * (1 - dw);
-    }
-
-    //Читает exel файл 2-ю колонку
-    private static Double[] read() {
-        List<Double> doubles = new ArrayList<>();
-        Double[] d = new Double[doubles.size()];
-        try {
-            XSSFWorkbook workbook = new XSSFWorkbook(FILE_NAME_READ);
-            XSSFSheet sheet = workbook.getSheetAt(0);
-            for (Row row : sheet) {
-                Iterator<Cell> iterator = row.cellIterator();
-                while (iterator.hasNext()) {
-                    Cell cell = iterator.next();
-                    Double o = null;
-                    if (cell.getColumnIndex() == 1) {
-                        o = cell.getNumericCellValue();
-//                        System.out.println("cell value = " + o);
-                        doubles.add(o);
-                    }
-                }
-            }
-            d = doubles.toArray(d);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return d;
-    }
-
-
-    private static void write(double[] doubles, int colNum) {
-        FileInputStream inputStream = null;
-        FileOutputStream outputStream = null;
-        try {
-            inputStream = new FileInputStream(new File(FILE_NAME_WRITE));
-            XSSFWorkbook workbook = (XSSFWorkbook) WorkbookFactory.create(inputStream);
-            XSSFSheet sheet = workbook.getSheetAt(0);
-            int rowNum = 3;
-            for (double value : doubles) {
-                Row row = sheet.getRow(rowNum) == null ? sheet.createRow(rowNum) : sheet.getRow(rowNum);
-                rowNum++;
-                Cell cell = row.getCell(colNum) == null ? row.createCell(colNum) : row.getCell(colNum);
-                cell.setCellValue(value);
-            }
-            outputStream = new FileOutputStream(FILE_NAME_WRITE);
-            workbook.write(outputStream);
-            workbook.close();
-        } catch (IOException | InvalidFormatException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        System.out.println("Done");
     }
 
 

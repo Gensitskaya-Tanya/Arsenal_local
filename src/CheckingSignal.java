@@ -26,12 +26,14 @@ public class CheckingSignal {
                 indexOfMax = i;
             }
         }
+        System.out.println(" maxValue = " + maxValue);
         double minValue = 0;
         for (int i = 0; i < xn; i++) {
             if (xc[i] < minValue) {
                 minValue = xc[i];
             }
         }
+        System.out.println(" minValue = " + minValue);
         if (maxValue - minValue < limitForAmplitudeDifference ){
             System.out.println("maxValue - minValue = " + (maxValue - minValue));
             System.out.println("Error 0 Point is bed! Difference between the maximum and minimum is less than the limit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");

@@ -81,7 +81,10 @@ public class ReadAndWriteInExel {
 
 
 
-    public  void write(double[] doubles, int colNum, int rowNum, String FILE_NAME_WRITE) {
+
+
+    public void write(double[] doubles, int colNum, int rowNum, String FILE_NAME_WRITE) {
+
         FileInputStream inputStream = null;
         FileOutputStream outputStream = null;
         try {
