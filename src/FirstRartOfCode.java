@@ -19,43 +19,23 @@ import java.util.List;
 public class FirstRartOfCode {
 
 
-    private static final String FILE_NAME_READ = "G:\\Информация по расчету фаз\\тестирование частей кода\\300x300.xlsx";
-    private static final String FILE_NAME_WRITE = "G:\\Информация по расчету фаз\\тестирование частей кода\\300x300.xlsx";
-
-    public static void main(String[] args) {
-        ReadAndWriteInExel readAndWriteInExel = new ReadAndWriteInExel();
-        Double[] arr = readAndWriteInExel.read(0, FILE_NAME_READ);
-//        for (int i = 0; i < arr.length; i++) {
-//            System.out.println(arr[i]);
-//        }
-        centerOfWeightSeek(arr);
-//        write(xs, 2);
-    }
-
-
-    private static void centerOfWeightSeek(Double[] sg) {
+    public  double centerOfWeightSeek(int [] sg) {
         ReadAndWriteInExel readAndWriteInExel = new ReadAndWriteInExel();
 
 //1_________________________________________________________________________________________
         System.out.println("1)  Вычитание среднего уровня по цугу");
         int xn = sg.length;
-        System.out.println("    длина массива цуга = " + xn);
+
         double[] xc = new double[2000];
         double[] xs = new double[2000];
         double pod = 0;
         for (int i = 0; i < xn; i++) {
             pod = pod + sg[i] / xn;
         }
-
         for (int i = 0; i < xn; i++) {
-//            xc[i] = (sg[i] - pod);
+            xc[i] = (sg[i] - pod);
             xs[i] = 0;
         }
-//Часть кода, которая выравнивает данные, убирая наклон. Используется линия регрессии.
-//_______________________________________________________________
-        Regres regres = new Regres();
-        xc = regres.getAlignedDate(sg);
-        readAndWriteInExel.write(xc, 4,0, FILE_NAME_WRITE);
 
 //2_________________________________________________________________________________________
         System.out.println("2)  Поиск центра масс квадратичного сигнала");
@@ -114,7 +94,7 @@ public class FirstRartOfCode {
         for (int i = 0; i < gaus.length; i++) {
             xs[i] = gaus[i];
         }
-        readAndWriteInExel.write(xs, 9,0, FILE_NAME_WRITE);
+//        readAndWriteInExel.write(xs, 9,0, FILE_NAME_WRITE);
 //5_________________________________________________________________________________________
         System.out.println("5)  Поиск центра масс демодулированого сигнала");
         // centr of weight seek second iteration   центр веса искать вторую итерацию
@@ -262,7 +242,7 @@ public class FirstRartOfCode {
 
         double Env = 0.135 * phase / per;
         System.out.println("Env = " + Env);
-
+        return Env;
     }
 
 
