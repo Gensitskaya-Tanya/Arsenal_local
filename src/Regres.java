@@ -1,5 +1,6 @@
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Name;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -17,19 +18,21 @@ import java.util.List;
 public class Regres {
     public Regres() {
     }
-    private static final String FILE_NAME_READ = "G:\\Информация по расчету фаз\\программа для СЫРЫХ ДАННЫХ\\zercalo step 8aver8 4000 30.01.2020\\0x470 zerkalo.xlsx";
-    private static final String FILE_NAME_WRITE = "G:\\Информация по расчету фаз\\программа для СЫРЫХ ДАННЫХ\\zercalo step 8aver8 4000 30.01.2020\\0x470 zerkalo.xlsx";
-//    private static final String FILE_NAME_READ = "G:\\Информация по расчету фаз\\Проверка коэфф регресии.xlsx";
-//    private static final String FILE_NAME_WRITE = "G:\\Информация по расчету фаз\\Проверка коэфф регресии.xlsx";
 
     public static void main(String[] args) {
-        Double[] arr = read();
         Regres regres = new Regres();
-       regres.getAlignedDate(arr);
+        ReadAndWriteInExel readAndWriteInExel = new ReadAndWriteInExel();
+
+        Double[] arr = readAndWriteInExel.read(0, NameFile.FILE_NAME_READ);
+        double alignedDate[] = regres.getAlignedDate(arr);
+        regres.printMaxOfArr(alignedDate);
+//        regres.writeAllMaxOfArr(alignedDate, 6, 0, NameFile.FILE_NAME_READ);
+//        readAndWriteInExel.write(alignedDate, 2, 0, NameFile.FILE_NAME_WRITE);
+
 
     }
 
-    public double [] getAlignedDate(Double[] arr) {
+    public double[] getAlignedDate(Double[] arr) {
         int N = arr.length;
         double Xi = 0;
         double Yi = 0;
@@ -39,95 +42,54 @@ public class Regres {
             Xi = Xi + i;
             Yi = Yi + arr[i];
             XiXi = XiXi + i * i;
-            XiYi = XiYi + i*arr[i];
+            XiYi = XiYi + i * arr[i];
         }
-        double a = (Yi*XiXi-Xi*XiYi)/(N*XiXi-Xi*Xi); // коэффициент сдвига (а), уравнение регресии n_i=a+b*x_i
+        double a = (Yi * XiXi - Xi * XiYi) / (N * XiXi - Xi * Xi); // коэффициент сдвига (а), уравнение регресии n_i=a+b*x_i
         System.out.println("a = " + a);
-        double b = (N*XiYi-Xi*Yi)/(N*XiXi-Xi*Xi); // коєфф. наклона (b),  уравнение регресии n_i=a+b*x_i
+        double b = (N * XiYi - Xi * Yi) / (N * XiXi - Xi * Xi); // коєфф. наклона (b),  уравнение регресии n_i=a+b*x_i
         System.out.println("b = " + b);
 
-        double [] regLine = new double [N];
-        for (int i = 0; i < N ; i++) {
-            regLine[i] = a + b*i;
-        }
-        double [] alignedDate = new double [N];
+        double[] regLine = new double[N];
         for (int i = 0; i < N; i++) {
-            alignedDate[i] = arr [i] -regLine[i];
+            regLine[i] = a + b * i;
         }
-        double max = alignedDate[1];
-        double min = alignedDate[0];
-        for (int i = 0; i < N-1; i++) {
-            if(alignedDate[i]<max){
-                min = alignedDate[i];
-                max = alignedDate[i+1];
-            }else {
-                min = alignedDate[i+1];
-                max = alignedDate[i];
-            }
-
+        double[] alignedDate = new double[N];
+        for (int i = 0; i < N; i++) {
+            alignedDate[i] = arr[i] - regLine[i];
         }
         return alignedDate;
     }
 
-
-
-    private static Double[] read() {
-        List<Double> doubles = new ArrayList<>();
-        Double[] d = new Double[doubles.size()];
-        try {
-            XSSFWorkbook workbook = new XSSFWorkbook(FILE_NAME_READ);
-            XSSFSheet sheet = workbook.getSheetAt(0);
-            for (Row row : sheet) {
-                Iterator<Cell> iterator = row.cellIterator();
-                while (iterator.hasNext()) {
-                    Cell cell = iterator.next();
-                    Double o = null;
-                    if (cell.getColumnIndex() == 0) {
-                        o = cell.getNumericCellValue();
-//                        System.out.println("cell value = " + o);
-                        doubles.add(o);
-                    }
-                }
+    public void printMaxOfArr(double arr[]) {
+        double maxY = arr[0];
+        int maxX = 0;
+        for (int i = 0; i < arr.length - 1; i++) {
+            if (arr[i + 1] > maxY) {
+                maxY = arr[i + 1];
+                maxX = i + 1;
             }
-            d = doubles.toArray(d);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return d;
+        System.out.println("maxX= " + maxX + ";  maxY= " + maxY);
     }
 
 
-    private static void write(double[] doubles, int colNum) {
-        FileInputStream inputStream = null;
-        FileOutputStream outputStream = null;
-        try {
-            inputStream = new FileInputStream(new File(FILE_NAME_WRITE));
-            XSSFWorkbook workbook = (XSSFWorkbook) WorkbookFactory.create(inputStream);
-            XSSFSheet sheet = workbook.getSheetAt(0);
-            int rowNum = 0;
-            for (double value : doubles) {
-                Row row = sheet.getRow(rowNum) == null ? sheet.createRow(rowNum) : sheet.getRow(rowNum);
-                rowNum++;
-                Cell cell = row.getCell(colNum) == null ? row.createCell(colNum) : row.getCell(colNum);
-                cell.setCellValue(value);
+    public void writeAllMaxOfArr(double arr[], int colNum, int rowNum, String FILE_NAME_WRITE) {
+        double[] arrOfmax = new double[arr.length];
+        double[] arrOfindex = new double[arr.length];
+
+        int numberIndex = 0;
+        double max = 0;
+        for (int i = 2; i < arr.length - 3; i++) {
+            if (arr[i] >= arr[i - 2] && arr[i] >= arr[i - 1] && arr[i] >= arr[i + 1] && arr[i] >= arr[i + 2] && arr[i] > 0) {
+                arrOfmax[numberIndex] = arr[i];
+                arrOfindex[numberIndex] = i;
+                numberIndex++;
             }
-            outputStream = new FileOutputStream(FILE_NAME_WRITE);
-            workbook.write(outputStream);
-            workbook.close();
-        } catch (IOException | InvalidFormatException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            System.out.println(i);
         }
-        System.out.println("Done");
+        ReadAndWriteInExel readAndWriteInExel = new ReadAndWriteInExel();
+        readAndWriteInExel.write(arrOfindex, (colNum - 1), rowNum, NameFile.FILE_NAME_WRITE);
+        readAndWriteInExel.write(arrOfmax, colNum, rowNum, NameFile.FILE_NAME_WRITE);
     }
+
 }
