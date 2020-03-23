@@ -32,26 +32,6 @@ public class TestFase {
 //                readAndWriteInExel.write(xc,1,0, NameFile.FILE_NAME_WRITE);
 
 
-        //2.1_________________________________________________________
-//        System.out.println("2)  Нахождение максимумов массива");
-//        double [] arrOfmax = new double[xc.length];
-//        double [] arrOfindex = new double[xc.length];
-//
-//        int numberIndex = 0;
-//        double max = 0;
-//        for (int i = 2; i <sg.length-3 ; i++) {
-//            if(xc[i]>=xc[i-2]&&xc[i]>=xc[i-1]&& xc[i]>=xc[i+1]&&xc[i]>=xc[i+2]&& xc[i]>0){
-//                arrOfmax[numberIndex] = xc[i];
-//                arrOfindex[numberIndex]= i;
-//                numberIndex++;
-//            }
-//            System.out.println(i);
-//        }
-//        readAndWriteInExel.write(arrOfindex,1,0, NameFile.FILE_NAME_WRITE);
-//        readAndWriteInExel.write(arrOfmax,2,0, NameFile.FILE_NAME_WRITE);
-
-
-
         double fre = 0;
         double ave = 0;
         for (int i = 0; i < xn; i++) {
@@ -102,7 +82,7 @@ public class TestFase {
         double centreDemod = centr;
         c = (int) Math.round(centr);
 
-        System.out.println("    centr = " + c + "   - центр масс демодулированного сигнала");
+        System.out.println("    centr = " + centreDemod + "   - центр масс демодулированного сигнала");
 //6_________________________________________________________________________________________
         System.out.println("6)  Оценка размера цуга по скорости затухания демодулированного сигнала");
         double wt = 0;
@@ -123,10 +103,11 @@ public class TestFase {
 //7_________________________________________________________________________________________
         System.out.println("7)  Коррекция уровня на вертикальную асимметрию цуга");
         System.out.println("    Определение нулевого уровня как среднего сигнала за рамками цуга");
-        System.out.println("    c = " + c + " - центр демодулированного сигнала из внесенной центрировкой");
+
         System.out.println("    wt = " + wt + " - поправочный коэффициент для коррекции центра масс и среднее значение");
 
         c = (int) Math.round(c + wt - n / 2.0);
+        System.out.println("    c = " + c + " - центр демодулированного сигнала из внесенной центрировкой");
         wt = wt + n / 2.0;
         int br = (int) Math.round(wt * 2.7 / 2.0);
         System.out.println("    br = " + br + "- это (wt * 2.7 / 2.0)");
@@ -141,7 +122,7 @@ public class TestFase {
 //
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         for (int i = -br + 1; i < br + 1; i++) {
-            if (xc[c + i + 1] * xc[c + i - 1] < 0) {
+            if (xc[c + i + 1] * xc[c + i - 1] < 0 ) {
                 pos[n] = i + (xc[c + i - 1] + xc[c + i + 1]) / (xc[c + i - 1] - xc[c + i + 1]); // определение координат нулей
 //                System.out.println(n + " i = " + i + "  pos[n] =  "  + pos[n] + "  " + (xc[c + i - 1] + xc[c + i + 1]) / (xc[c + i - 1] - xc[c + i + 1]) + "   c + i + 1= " + (c + i + 1) +  "    xc[c + i + 1]= " + xc[c + i + 1] +  "       c + i - 1= "  + (c + i - 1) + "       xc[c + i - 1] =" + xc[c + i - 1]);
 //                System.out.println(n + " i = " + i + "  pos[n] =  "  + pos[n] + "  " + (xc[c + i - 1] + xc[c + i + 1]) / (xc[c + i - 1] - xc[c + i + 1]));
@@ -168,13 +149,15 @@ public class TestFase {
 //                System.out.println("k = " + k + "   pos[k] = " + pos[k]);
             }
         }
-        for (int i = 0; i < pos.length; i++) {
+//        for (int i = 0; i < pos.length; i++) {
 //            System.out.println(i + "  " + pos[i]); // записано только первые 25 значений нулей остальные остались дубликаты
 //            System.out.println(pos[i]);
-        }
+//        }
         n = k;
         per = 0;
         ave = 0;
+
+
 //        System.out.println("n = "+n);
         for (int i = 1; i < n; i++) {      // !!!!!!!!!!!!!!!!!!! значение n на 1 меньше, чем реальных нулей нужно ставить <=
             if ((pos[i] - pos[i - 1]) > 2) {
