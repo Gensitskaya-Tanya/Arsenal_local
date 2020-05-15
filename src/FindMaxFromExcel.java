@@ -2,8 +2,8 @@ import java.io.File;
 
 public class FindMaxFromExcel {
     public static void main(String[] args) {
-        File dir = new File("C:\\Users\\Tanya\\Downloads\\ско по 10 точкам 3 ряда\\сигнал в точках\\ряд y=300\\xlsx"); //path указывает на директорию
-        String FILE_NAME_WRITE = "C:\\Users\\Tanya\\Downloads\\ско по 10 точкам 3 ряда\\сигнал в точках\\ряд y=300\\результат y300.xlsx";
+        File dir = new File("H:\\Информация по расчету фаз\\ско по 10 точкам 3 ряда\\сигнал в точках\\ряд y=300\\xlsx"); //path указывает на директорию
+        String FILE_NAME_WRITE = "H:\\Информация по расчету фаз\\ско по 10 точкам 3 ряда\\сигнал в точках\\ряд y=300\\результат y300.xlsx";
         File[] arrFiles = dir.listFiles();
         double arrOfMax [] = new double [arrFiles.length];
         double centDemSignal [] = new double [arrFiles.length];
@@ -26,6 +26,8 @@ public class FindMaxFromExcel {
         }
         readAndWriteInExel.write(arrOfMax,2, 0, FILE_NAME_WRITE);
         readAndWriteInExel.write(centDemSignal,4, 0, FILE_NAME_WRITE);
+
+
 
     }
 

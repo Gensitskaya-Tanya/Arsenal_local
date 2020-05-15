@@ -10,9 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 public class Regres {
@@ -26,7 +24,7 @@ public class Regres {
         Double[] arr = readAndWriteInExel.read(0, NameFile.FILE_NAME_READ);
         double alignedDate[] = regres.getAlignedDate(arr);
         regres.printMaxOfArr(alignedDate);
-//        regres.writeAllMaxOfArr(alignedDate, 6, 0, NameFile.FILE_NAME_READ);
+        regres.writeAllMaxOfArr(alignedDate, 12, 0, NameFile.FILE_NAME_WRITE);
 //        readAndWriteInExel.write(alignedDate, 2, 0, NameFile.FILE_NAME_WRITE);
 
 
@@ -92,4 +90,87 @@ public class Regres {
         readAndWriteInExel.write(arrOfmax, colNum, rowNum, NameFile.FILE_NAME_WRITE);
     }
 
+    public void findAllMax(double [] xc, int N){
+        int i =0;
+        //  Find all max
+        double[][] arrOFmax = new double[N][2];
+
+        int numberIndex = 0;
+        for (i = 6; i < arrOFmax.length - 8; i++) {
+            if (xc[i] > 0&&
+
+                    xc[i] >= xc[i - 6]&&
+                    xc[i] >= xc[i - 5]&&
+                    xc[i] >= xc[i - 4]&&
+                    xc[i] >= xc[i - 3]&&
+                    xc[i] >= xc[i - 2]&&
+                    xc[i] >= xc[i - 1]&&
+                    xc[i] >= xc[i + 1]&&
+                    xc[i] >= xc[i + 2]&&
+                    xc[i] >= xc[i + 3]&&
+                    xc[i] >= xc[i + 4]&&
+                    xc[i] >= xc[i + 5]&&
+                    xc[i] >= xc[i + 6]){
+                arrOFmax[numberIndex][1] = xc[i];
+                arrOFmax[numberIndex][0] = i;
+//                System.out.println(arrOFmax[numberIndex][0] + " "+arrOFmax[numberIndex][1]);
+                numberIndex++;
+            }
+        }
+
+        Arrays.sort(arrOFmax, new Comparator<double[]>() {
+            @Override
+            public int compare(double[] o1, double[] o2) {
+                return Double.compare(o2[1], o1[1]);
+            }
+        });
+//        for (int j = 0; j <arrOFmax.length ; j++) {
+//            for (int k = 0; k <arrOFmax[j].length ; k++) {
+//                System.out.print(arrOFmax[j][k] + "   ");
+//            }
+//            System.out.println();
+//        }
+        double [][] arrMax9 = new double[9][2];
+        for (int j = 0; j < arrMax9.length ; j++) {
+            for (int k = 0; k <arrMax9[j].length ; k++) {
+                arrMax9[j][k] = arrOFmax[j][k];
+            }
+        }
+
+//        for (int j = 0; j <arrMax9.length ; j++) {
+//            for (int k = 0; k <arrMax9[j].length ; k++) {
+//                System.out.print(arrMax9[j][k] + "   ");
+//            }
+//            System.out.println();
+//        }
+
+        Arrays.sort(arrMax9, new Comparator<double[]>() {
+            @Override
+            public int compare(double[] o1, double[] o2) {
+                return Double.compare(o1[0], o2[0]);
+            }
+        });
+//        System.out.println();
+//        System.out.println();
+
+        for (int j = 0; j <arrMax9.length ; j++) {
+            for (int k = 0; k <arrMax9[j].length ; k++) {
+                System.out.print(arrMax9[j][k] + "   ");
+            }
+            System.out.println();
+        }
+
+// Center of mass_______________________________
+        double fre = 0;
+        double ave = 0;
+        int first = (int)arrMax9[0][0];
+        int end = (int)arrMax9[8][0];
+        System.out.println("к-во точек между 1-м и 9-м максимумом: " + (end-first));
+        for (i = first; i < end+1; i++) {
+            fre = fre + xc[i] * xc[i] * i;
+            ave = ave + xc[i] * xc[i];
+        }
+        int centr = (int) (fre / ave);
+//        System.out.println(centr);
+    }
 }

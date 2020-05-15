@@ -1,24 +1,34 @@
 public class AppNew {
     public static void main(String[] args) {
-        ReadBinFile readBinFile = new ReadBinFile();
-        int[] arr = readBinFile.readPointFromBinFile(292, 300, NameFile.BIN_FILE_NAME_READ);
+
+        for (int startX = 300; startX < 301 ; startX++) {
+            ReadBinFile readBinFile = new ReadBinFile();
+            int Y = 300;
+            int[] arr = readBinFile.readPointFromBinFile(startX, Y , NameFile.BIN_FILE_NAME_READ);
 
 
-        ReadAndWriteInExel readAndWriteInExel = new ReadAndWriteInExel();
-        Double[] arr1 = readAndWriteInExel.read(0, NameFile.FILE_NAME_READ);
-        double[] arr2 = new double[arr1.length];
-        for (int i = 0; i < arr1.length; i++) {
-            arr2[i] = arr1[i];
+//        ReadAndWriteInExel readAndWriteInExel = new ReadAndWriteInExel();
+//        Double[] arr1 = readAndWriteInExel.read(0, NameFile.FILE_NAME_READ);
+//        double[] arr2 = new double[arr1.length];
+//        for (int i = 0; i < arr1.length; i++) {
+//            arr2[i] = arr1[i];
+//        }
+//        int[] arr3 = new int[arr1.length];
+//        for (int i = 0; i < arr1.length; i++) {
+//            arr3[i] = (int) arr2[i];
+//            System.out.println(arr3[i]);
+//        }
+
+            AppNew appNew = new AppNew();
+            double rezult = appNew.runAppNew(arr);
+//            System.out.println("X: " + startX + " Y: " + Y +"  "+ rezult);
+            System.out.println(rezult);
         }
-        int[] arr3 = new int[arr1.length];
-        for (int i = 0; i < arr1.length; i++) {
-            arr3[i] = (int) arr2[i];
-            System.out.println(arr3[i]);
-        }
 
-        AppNew appNew = new AppNew();
-        double rezult = appNew.runAppNew(arr3);
-        System.out.println(rezult);
+
+//        FindMaxFromExcel findMaxFromExcel = new FindMaxFromExcel();
+//        double maxCutsignal = findMaxFromExcel.findMaxCutSignal(arr2);
+//        System.out.println("maxCutsignal  "  + (maxCutsignal*5.061/1000));
     }
 
     private int fn, hn = 0;
@@ -83,6 +93,7 @@ public class AppNew {
                 Max = xc[i];
             }
         }
+//        readAndWriteInExel.write(xc, 0, 0, NameFile.FILE_NAME_WRITE);
         Limit = 30;   // kontrok amplituda
         if ((Max - Min) < Limit) {
             return 0; // лучше выбросить исключение
@@ -95,7 +106,7 @@ public class AppNew {
             ave = ave + xc[i] * xc[i];
         }
         centr = fre / ave;
-        System.out.println("центр масс выровненного сигнала centr = " + centr);
+//        System.out.println("центр масс выровненного сигнала centr = " + centr);
         c = (int) Math.round(centr);
         dir = centr;
 // halfperiod estimation
@@ -109,7 +120,7 @@ public class AppNew {
         c = (int) Math.round(centr);
 
         // quadrature demodulator
-        qr = (double) n / 2 - (int)(n / 2); // дробная часть числа
+        qr = (double) n / 2 - (int) (n / 2); // дробная часть числа
         qn = (int) (n / 2);
         for (i = qn + 1; i < N - qn - 1; i++) {
             xs[i] = (xc[i] * xc[i] + app(qr, xc[i + qn], xc[i + qn + 1]) * app(qr, xc[i + qn], xc[i + qn + 1]) / 2 +
@@ -126,7 +137,7 @@ public class AppNew {
             ave = ave + xs[i];
         }
         centr = fre / ave;
-        System.out.println("центр масс демодулированного сигнала centr= " + centr);
+//        System.out.println("центр масс демодулированного сигнала centr= " + centr);
         c = (int) Math.round(centr);
         // 460 ms
         // range estimation
@@ -216,7 +227,9 @@ public class AppNew {
         } else {
             phase = c;
         }
-        double Env = (0.561186/4)* phase / per; // результат в микрометрах
+        System.out.println(phase);
+        System.out.println(per);
+        double Env = (0.561186 / 4) * phase / per; // результат в микрометрах
         return Env;
     }
 

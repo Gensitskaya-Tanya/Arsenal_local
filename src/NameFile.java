@@ -1,6 +1,7 @@
 public class NameFile {
-    public static final String FILE_NAME_READ = "H:\\измерения март 2020\\2020_03_06 лазерное зеркало 2\\2-я матрица\\x499-y261-3,812613 3.7525.xlsx";
-    public static final String FILE_NAME_WRITE = "C:\\Users\\Tanya\\Downloads\\тестирование AppNew\\AppNew.xlsx";
-    public static final String BIN_FILE_NAME_READ = "C:\\Users\\Tanya\\Downloads\\ско по 10 точкам 3 ряда\\5000.bin";
+    public static final String FILE_NAME_READ = "H:\\Информация по расчету фаз\\ско по 10 точкам 3 ряда\\сигнал в точках\\ряд y=300\\xlsx\\x292_y300.xlsx";
+    public static final String FILE_NAME_WRITE = "H:\\Информация по расчету фаз\\ско по 10 точкам 3 ряда\\сигнал в точках\\ряд y=300\\xlsx\\x292_y300.xlsx";
+    public static final String BIN_FILE_NAME_READ = "D:\\BIN файлы\\2020_05_08 ступенька 600нм\\DOE 5000 4 - 8.bin";
+    public static final String FILE_NAME_WRITE_TXT = "H:\\data_bin.txt";
 
 }

@@ -1,21 +1,22 @@
 public class GaussFunction {
 
-    private static final String FILE_NAME_READ = "G:\\Информация по расчету фаз\\тестирование частей кода\\Проверка функции Гаусса.xlsx";
-    private static final String FILE_NAME_WRITE = "G:\\Информация по расчету фаз\\тестирование частей кода\\Проверка функции Гаусса.xlsx";
+
 
 
     public static void main(String[] args) {
     ReadAndWriteInExel readAndWriteInExel = new ReadAndWriteInExel();
-//    Double [] arr = readAndWriteInExel.read(0,FILE_NAME_READ);
-//        for (int i = 0; i <arr.length ; i++) {
+    Double [] arr = readAndWriteInExel.read(0,NameFile.FILE_NAME_READ);
+    double [] arr1 = new double[arr.length];
+        for (int i = 0; i <arr.length ; i++) {
+            arr1 [i] = arr[i];
 //            System.out.println(i + "  =" + arr[i]);
-//        }
-//        GaussFunction gaussFunction = new GaussFunction();
-//        double [] arrGaussFunction = gaussFunction.getGaussFunction(arr);
-//        for (int i = 0; i <arrGaussFunction.length ; i++) {
-//            System.out.println(i + "  =" + arrGaussFunction[i]);
-//        }
-//        readAndWriteInExel.write(arrGaussFunction, 2, 1, FILE_NAME_WRITE);
+        }
+        GaussFunction gaussFunction = new GaussFunction();
+        double [] arrGaussFunction = gaussFunction.getGaussFunction(arr1);
+        for (int i = 0; i <arrGaussFunction.length ; i++) {
+            System.out.println(i + "  =" + arrGaussFunction[i]);
+        }
+        readAndWriteInExel.write(arrGaussFunction, 2, 0, NameFile.FILE_NAME_WRITE);
     }
 
     public double [] getGaussFunction(double[] arr) {
