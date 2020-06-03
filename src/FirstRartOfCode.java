@@ -59,7 +59,7 @@ public class FirstRartOfCode {
         while (xc[c + n] * xc[c + n - 1] > 0) {
             n++;
         }
-        System.out.println("    к значению  с = " + c + " прибавляем значение переменной n = " + n + " - следующий полупериод");
+        System.out.println("    к значению  с = " + c + " прибавляем значение переменной N = " + n + " - следующий полупериод");
         c = (int) Math.round(centr);
 //4_________________________________________________________________________________________
         System.out.println("4)  Квадратичная демодуляция");
@@ -120,12 +120,12 @@ public class FirstRartOfCode {
         wt = wt + n / 2.0;
         System.out.println("    xn = " + xn + " - к-во точек суммарное");
         System.out.println("    wt = " + " - переменная для выравнивания центра или усредненное к-во точек справа и слева");
-        System.out.println("    (n+) = " + n + " - к-во точек от центра вправо  ");
+        System.out.println("    (N+) = " + n + " - к-во точек от центра вправо  ");
         n = 0;
         while ((xs[c - n] > xs[c] / 10) && (c - n > 0)) {
             n++;
         }
-        System.out.println("    (n-) = " + n + " - к-во точек от центра влево  ");
+        System.out.println("    (N-) = " + n + " - к-во точек от центра влево  ");
         c = (int) Math.round(c + wt - n / 2.0);
         wt = wt + n / 2.0;
         int br = (int) Math.round(wt * 2.7 / 2.0);
@@ -145,15 +145,15 @@ public class FirstRartOfCode {
         for (int i = -br + 1; i < br + 1; i++) {
             if (xc[c + i + 1] * xc[c + i - 1] < 0) {
                 pos[n] = i + (xc[c + i - 1] + xc[c + i + 1]) / (xc[c + i - 1] - xc[c + i + 1]); // определение нулей
-//                System.out.println(n + " " + pos[n] + "  " + (xc[c + i - 1] + xc[c + i + 1]) / (xc[c + i - 1] - xc[c + i + 1]));
+//                System.out.println(N + " " + pos[N] + "  " + (xc[c + i - 1] + xc[c + i + 1]) / (xc[c + i - 1] - xc[c + i + 1]));
                 n++;
             }
             if (n > 1) {
                 xs[c + i] = (pos[n - 1] - pos[n - 2]) / 24.0;
-//                System.out.println((c + i)+ "  " + ((pos[n - 1] - pos[n - 2]) / 24.0));
+//                System.out.println((c + i)+ "  " + ((pos[N - 1] - pos[N - 2]) / 24.0));
             }
         }
-//        System.out.println(n);
+//        System.out.println(N);
         n--;
         double per = 0;
         ave = 0;
@@ -173,8 +173,8 @@ public class FirstRartOfCode {
         n = k;
         per = 0;
         ave = 0;
-//        System.out.println("n = "+n);
-        for (int i = 1; i < n; i++) {      // !!!!!!!!!!!!!!!!!!! значение n на 1 меньше, чем реальных нулей нужно ставить <=
+//        System.out.println("N = "+N);
+        for (int i = 1; i < n; i++) {      // !!!!!!!!!!!!!!!!!!! значение N на 1 меньше, чем реальных нулей нужно ставить <=
             if ((pos[i] - pos[i - 1]) > 2) {
                 per = per + 1.0 * (pos[i] - pos[i - 1]); // суммируем расстояние между нулями
                 ave = ave + 1; //суммируем к-во нулей
@@ -216,8 +216,8 @@ public class FirstRartOfCode {
         }
         System.out.println("    находим  координату центрального нуля = " + ave);
         System.out.println("    количество итерраций ic = " + ic);
-        System.out.println("   n = " + n);
-        System.out.println("    pos.length = " + pos.length);
+        System.out.println("   N = " + n);
+        System.out.println("    pos.N = " + pos.length);
         phase = 0;
         ave = 0;
         for (int i = 0; i < n / 2 - 1; i++) {

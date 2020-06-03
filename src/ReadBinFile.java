@@ -17,7 +17,7 @@ public class ReadBinFile {
                 int [] arr = readBinFile.readPointFromBinFile(koordX, koordY, NameFile.BIN_FILE_NAME_READ);
                     System.out.println("X: " + koordX + " Y: " + koordY + "  " + arr.length);
 
-//                for (int i = 0; i <arr.length ; i++) {
+//                for (int i = 0; i <arr.N ; i++) {
 //                    System.out.println(i + " " + arr[i]);
 //                }
             }
@@ -28,7 +28,7 @@ public class ReadBinFile {
 //        readBinFile.calculatMaxOfSignalFromMatrix(400,420,400,402, NameFile.BIN_FILE_NAME_READ);
 //        double[] arr = readBinFile.calculatMaxOfSignalInRow(300, 320, 300, NameFile.BIN_FILE_NAME_READ);
 //        int [] arr2 = readBinFile.readPointFromBinFile(300,300,NameFile.BIN_FILE_NAME_READ);
-//        for (int i = 0; i <arr2.length ; i++) {
+//        for (int i = 0; i <arr2.N ; i++) {
 //            System.out.println(i +" "+arr2[i]);
 //        }
 //        ReadAndWriteInExel readAndWriteInExel = new ReadAndWriteInExel();

@@ -25,7 +25,7 @@ public class Demodylyator {
         for (int i = 0; i < xn; i++) {
             pod = pod + sg[i] / xn;
         }
-        System.out.printf("    среднее значение сигнала по цугу = %.20f%n", pod);
+        System.out.printf("    среднее значение сигнала по цугу = %.20f%N", pod);
 
 
 //2)  Поиск центра масс квадратичного сигнала
@@ -57,7 +57,7 @@ public class Demodylyator {
         while (xc[c + n] * xc[c + n - 1] > 0) {
             n++;
         }
-        System.out.println("    к значению  с = " + c + " прибавляем значение переменной n = " + n + " - к-во точек в полупериоде");
+        System.out.println("    к значению  с = " + c + " прибавляем значение переменной N = " + n + " - к-во точек в полупериоде");
 
         c = (int) Math.round(centr);
 

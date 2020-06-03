@@ -1,7 +1,7 @@
 public class AppNew {
     public static void main(String[] args) {
 
-        for (int startX = 300; startX < 301 ; startX++) {
+        for (int startX = 200; startX < 201 ; startX++) {
             ReadBinFile readBinFile = new ReadBinFile();
             int Y = 300;
             int[] arr = readBinFile.readPointFromBinFile(startX, Y , NameFile.BIN_FILE_NAME_READ);
@@ -9,12 +9,12 @@ public class AppNew {
 
 //        ReadAndWriteInExel readAndWriteInExel = new ReadAndWriteInExel();
 //        Double[] arr1 = readAndWriteInExel.read(0, NameFile.FILE_NAME_READ);
-//        double[] arr2 = new double[arr1.length];
-//        for (int i = 0; i < arr1.length; i++) {
+//        double[] arr2 = new double[arr1.N];
+//        for (int i = 0; i < arr1.N; i++) {
 //            arr2[i] = arr1[i];
 //        }
-//        int[] arr3 = new int[arr1.length];
-//        for (int i = 0; i < arr1.length; i++) {
+//        int[] arr3 = new int[arr1.N];
+//        for (int i = 0; i < arr1.N; i++) {
 //            arr3[i] = (int) arr2[i];
 //            System.out.println(arr3[i]);
 //        }
@@ -22,7 +22,7 @@ public class AppNew {
             AppNew appNew = new AppNew();
             double rezult = appNew.runAppNew(arr);
 //            System.out.println("X: " + startX + " Y: " + Y +"  "+ rezult);
-            System.out.println(rezult);
+//            System.out.println(rezult);
         }
 
 
@@ -84,6 +84,7 @@ public class AppNew {
         for (i = 0; i < N; i++) {
             regLine[i] = a + b * i;
         }
+
         for (i = 0; i < N; i++) {
             xc[i] = sg[i] - regLine[i];
             if (xc[i] < Min) {
@@ -93,6 +94,7 @@ public class AppNew {
                 Max = xc[i];
             }
         }
+
 //        readAndWriteInExel.write(xc, 0, 0, NameFile.FILE_NAME_WRITE);
         Limit = 30;   // kontrok amplituda
         if ((Max - Min) < Limit) {
@@ -108,6 +110,7 @@ public class AppNew {
         centr = fre / ave;
 //        System.out.println("центр масс выровненного сигнала centr = " + centr);
         c = (int) Math.round(centr);
+
         dir = centr;
 // halfperiod estimation
         while (xc[c] * xc[c - 1] > 0) {
@@ -119,6 +122,7 @@ public class AppNew {
         }
         c = (int) Math.round(centr);
 
+
         // quadrature demodulator
         qr = (double) n / 2 - (int) (n / 2); // дробная часть числа
         qn = (int) (n / 2);
@@ -126,7 +130,7 @@ public class AppNew {
             xs[i] = (xc[i] * xc[i] + app(qr, xc[i + qn], xc[i + qn + 1]) * app(qr, xc[i + qn], xc[i + qn + 1]) / 2 +
                     app(1 - qr, xc[i - qn - 1], xc[i - qn]) * app(1 - qr, xc[i - qn - 1], xc[i - qn]) / 2) / 10;
         }
-//                readAndWriteInExel.write(xs, 4, 0, NameFile.FILE_NAME_WRITE);
+// readAndWriteInExel.write(xs, 4, 0, NameFile.FILE_NAME_WRITE);
 // center of weight seek second iteration
         n = 1;
         ave = 0;
@@ -154,6 +158,7 @@ public class AppNew {
         c = (int) Math.round(c + wt - n / 2.0);
         wt = wt + n / 2.0;
         br = (int) Math.round(wt * 2.7 / 2.0);
+
         // 470 ms
         // period calculation---------------------------------
 
@@ -206,6 +211,7 @@ public class AppNew {
         if ((c - phase) > per / 2) {
             phase = phase + per;
         }
+
         ic = 0;
         ave = Math.abs(pos[1]);
         for (i = 1; i < n; i++) {
@@ -227,9 +233,10 @@ public class AppNew {
         } else {
             phase = c;
         }
-        System.out.println(phase);
-        System.out.println(per);
-        double Env = (0.561186 / 4) * phase / per; // результат в микрометрах
+//        System.out.println(phase);
+//        System.out.println(per);
+//        double Env = (0.561186 / 4) * phase / per; // результат в микрометрах
+        double Env = phase; // результат в микрометрах
         return Env;
     }
 

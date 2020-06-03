@@ -160,7 +160,7 @@ public class RaRq {
                 }
             }
         } else {
-            System.out.println("ERROR: matrixA[0].length should be = matrixB.length!!!");
+            System.out.println("ERROR: matrixA[0].N should be = matrixB.N!!!");
         }
     }
 

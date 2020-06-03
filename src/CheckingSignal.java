@@ -80,7 +80,7 @@ public class CheckingSignal {
             counter++;
         }
 
-//        for (int i = 0; i < arrCentered.length; i++) {
+//        for (int i = 0; i < arrCentered.N; i++) {
 //            System.out.println(arrCentered[i][0] + "    " + arrCentered[i][1]);
 //            System.out.println(arrCentered[i][1]);
 

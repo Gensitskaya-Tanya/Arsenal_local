@@ -10,7 +10,7 @@ public class TestFase {
 
     private void centerOfWeightSeek() {
         Double[] sg = readAndWriteInExel.read(0, NameFile.FILE_NAME_READ);
-//        for (int i = 0; i < sg.length; i++) {
+//        for (int i = 0; i < sg.N; i++) {
 //            System.out.println(sg[i]);
 //        }
 //1_________________________________________________________________________________________
@@ -52,7 +52,7 @@ public class TestFase {
         while (xc[c + n] * xc[c + n - 1] > 0) {
             n++;
         }
-        System.out.println("    к значению  с = " + c + " прибавляем значение переменной n = " + n + " - следующий полупериод");
+        System.out.println("    к значению  с = " + c + " прибавляем значение переменной N = " + n + " - следующий полупериод");
         c = (int) Math.round(centr);
 //4_________________________________________________________________________________________
         System.out.println("4)  Квадратичная демодуляция");
@@ -93,12 +93,12 @@ public class TestFase {
         wt = wt + n / 2.0;
         System.out.println("    xn = " + xn + " - к-во точек суммарное");
         System.out.println("    wt = " + wt + " - переменная для выравнивания центра или усредненное к-во точек справа и слева");
-        System.out.println("    (n+) = " + n + " - к-во точек от центра вправо  ");
+        System.out.println("    (N+) = " + n + " - к-во точек от центра вправо  ");
         n = 0;
         while ((xs[c - n] > xs[c] / 10) && (c - n > 0)) {
             n++;
         }
-        System.out.println("    (n-) = " + n + " - к-во точек от центра влево  ");
+        System.out.println("    (N-) = " + n + " - к-во точек от центра влево  ");
 
 //7_________________________________________________________________________________________
         System.out.println("7)  Коррекция уровня на вертикальную асимметрию цуга");
@@ -124,22 +124,22 @@ public class TestFase {
         for (int i = -br + 1; i < br + 1; i++) {
             if (xc[c + i + 1] * xc[c + i - 1] < 0 ) {
                 pos[n] = i + (xc[c + i - 1] + xc[c + i + 1]) / (xc[c + i - 1] - xc[c + i + 1]); // определение координат нулей
-//                System.out.println(n + " i = " + i + "  pos[n] =  "  + pos[n] + "  " + (xc[c + i - 1] + xc[c + i + 1]) / (xc[c + i - 1] - xc[c + i + 1]) + "   c + i + 1= " + (c + i + 1) +  "    xc[c + i + 1]= " + xc[c + i + 1] +  "       c + i - 1= "  + (c + i - 1) + "       xc[c + i - 1] =" + xc[c + i - 1]);
-//                System.out.println(n + " i = " + i + "  pos[n] =  "  + pos[n] + "  " + (xc[c + i - 1] + xc[c + i + 1]) / (xc[c + i - 1] - xc[c + i + 1]));
+//                System.out.println(N + " i = " + i + "  pos[N] =  "  + pos[N] + "  " + (xc[c + i - 1] + xc[c + i + 1]) / (xc[c + i - 1] - xc[c + i + 1]) + "   c + i + 1= " + (c + i + 1) +  "    xc[c + i + 1]= " + xc[c + i + 1] +  "       c + i - 1= "  + (c + i - 1) + "       xc[c + i - 1] =" + xc[c + i - 1]);
+//                System.out.println(N + " i = " + i + "  pos[N] =  "  + pos[N] + "  " + (xc[c + i - 1] + xc[c + i + 1]) / (xc[c + i - 1] - xc[c + i + 1]));
                 n++;
             }
             if (n > 1) {
                 xs[c + i] = (pos[n - 1] - pos[n - 2]) / 24.0; // Почему делим на 24 в программе дальше используется только во втором демодуляторе ?????????????????????????????????????????
-//                System.out.println((c + i)+ "  " + ((pos[n - 1] - pos[n - 2]) / 24.0));
+//                System.out.println((c + i)+ "  " + ((pos[N - 1] - pos[N - 2]) / 24.0));
             }
         }
-//        System.out.println(n);
+//        System.out.println(N);
         n--;
         double per = 0;
         ave = 0;
 
         int k = 0;
-        for (int i = 1; i < n; i++) {                                // Последний ноль не захватывается  не надо делать n-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        for (int i = 1; i < n; i++) {                                // Последний ноль не захватывается  не надо делать N-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             if ((pos[i] - pos[i - 1]) > 2) {
                 k++;
                 pos[k] = pos[i];
@@ -149,7 +149,7 @@ public class TestFase {
 //                System.out.println("k = " + k + "   pos[k] = " + pos[k]);
             }
         }
-//        for (int i = 0; i < pos.length; i++) {
+//        for (int i = 0; i < pos.N; i++) {
 //            System.out.println(i + "  " + pos[i]); // записано только первые 25 значений нулей остальные остались дубликаты
 //            System.out.println(pos[i]);
 //        }
@@ -158,8 +158,8 @@ public class TestFase {
         ave = 0;
 
 
-//        System.out.println("n = "+n);
-        for (int i = 1; i < n; i++) {      // !!!!!!!!!!!!!!!!!!! значение n на 1 меньше, чем реальных нулей нужно ставить <=
+//        System.out.println("N = "+N);
+        for (int i = 1; i < n; i++) {      // !!!!!!!!!!!!!!!!!!! значение N на 1 меньше, чем реальных нулей нужно ставить <=
             if ((pos[i] - pos[i - 1]) > 2) {
                 per = per + 1.0 * (pos[i] - pos[i - 1]); // суммируем расстояние между нулями
                 ave = ave + 1; //суммируем к-во нулей
@@ -182,7 +182,7 @@ public class TestFase {
         per = per / ave;
         System.out.println("     - 2. 1.среднее значения полупериодов для условия (per * 0.5) = " + per);
         double phase = (pos[n / 2] + c);  // центр масс, который отцентрирован сдвинули в позицию центрального нуля
-        System.out.println(" pos[n / 2] = " +  pos[n / 2] + " c=  " + c + "   pos[n / 2] + c = " + (pos[n / 2] + c));
+        System.out.println(" pos[N / 2] = " +  pos[n / 2] + " c=  " + c + "   pos[N / 2] + c = " + (pos[n / 2] + c));
 //9_________________________________________________________________________________________
         System.out.println("9)  Поиск центрального нуля фазы");
         System.out.println("    - Поиск нуля ближайшего к центру масс с правой стороны = " + phase);
@@ -204,12 +204,12 @@ public class TestFase {
         }
         System.out.println("    находим  координату центрального нуля, который лежит ближе к центру масс демодулированного сигнала = " + ave);
         System.out.println("    количество итерраций ic = " + ic);
-        System.out.println("   n = " + n);
-        System.out.println("    pos.length = " + pos.length);
+        System.out.println("   N = " + n);
+        System.out.println("    pos.N = " + pos.length);
         phase = 0;
         ave = 0;
         System.out.println(pos.length);
-//        for (int i = 0; i < n / 2 - 1 && i<=ic && i<=n-ic; i++) {  ///  Лучше поставить такую проверку (int i = 0; i < n / 2 - 1 && i<=ic && i<=n-ic; i++)
+//        for (int i = 0; i < N / 2 - 1 && i<=ic && i<=N-ic; i++) {  ///  Лучше поставить такую проверку (int i = 0; i < N / 2 - 1 && i<=ic && i<=N-ic; i++)
              for (int i = 0; i < n / 2 - 1; i++) {
                 ave = ave + 1;
 //            System.out.println("ic =" + ic + " i=" + i);

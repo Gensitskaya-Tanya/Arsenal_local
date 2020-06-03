@@ -72,7 +72,7 @@ public class FindMaxOFSignal {
         double maxY = alignedData[0];
 
 //        int maxX = 0;
-//        for (int i = 0; i < alignedData.length - 1; i++) {
+//        for (int i = 0; i < alignedData.N - 1; i++) {
 //            if (alignedData[i + 1] > maxY) {
 //                maxY = alignedData[i + 1];
 //                maxX = i + 1;
@@ -118,7 +118,7 @@ public class FindMaxOFSignal {
                 break;
             }
         }
-//        for (int i = 0; i < cutArrX.length; i++) {
+//        for (int i = 0; i < cutArrX.N; i++) {
 //            System.out.println(cutArrX[i] + "    " + cutArrY[i]);
 //        }
 //____________ 4. Находим коэффициенты линии тренда 2-го порядка. Коэфф. регресии

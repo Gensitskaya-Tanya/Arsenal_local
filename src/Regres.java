@@ -124,8 +124,8 @@ public class Regres {
                 return Double.compare(o2[1], o1[1]);
             }
         });
-//        for (int j = 0; j <arrOFmax.length ; j++) {
-//            for (int k = 0; k <arrOFmax[j].length ; k++) {
+//        for (int j = 0; j <arrOFmax.N ; j++) {
+//            for (int k = 0; k <arrOFmax[j].N ; k++) {
 //                System.out.print(arrOFmax[j][k] + "   ");
 //            }
 //            System.out.println();
@@ -137,8 +137,8 @@ public class Regres {
             }
         }
 
-//        for (int j = 0; j <arrMax9.length ; j++) {
-//            for (int k = 0; k <arrMax9[j].length ; k++) {
+//        for (int j = 0; j <arrMax9.N ; j++) {
+//            for (int k = 0; k <arrMax9[j].N ; k++) {
 //                System.out.print(arrMax9[j][k] + "   ");
 //            }
 //            System.out.println();

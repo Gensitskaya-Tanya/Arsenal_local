@@ -81,7 +81,7 @@ public class FindMaxFromExcel {
                 break;
             }
         }
-//        for (int i = 0; i < cutArrX.length; i++) {
+//        for (int i = 0; i < cutArrX.N; i++) {
 //            System.out.println(cutArrX[i] + "    " + cutArrY[i]);
 //        }
 //____________ 4. Находим коэффициенты линии тренда 2-го порядка. Коэфф. регресии
